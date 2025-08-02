@@ -1,0 +1,13 @@
+<?php
+
+namespace Tests\ApiMocker\{{providerName}};
+
+use Ranierif\AbstractApiMocker;
+
+class {{className}} extends AbstractApiMocker
+{
+    protected function getProviderName(): string
+    {
+        return '{{providerName}}';
+    }
+}
