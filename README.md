@@ -22,7 +22,7 @@ API Mocker provides an easy way to mock external API responses in your PHP tests
 You can install the package via composer:
 
 ```shell
-bash composer require --dev ranierif/api-mocker
+composer require --dev ranierif/api-mocker
 ```
 
 ## Usage
@@ -32,13 +32,13 @@ bash composer require --dev ranierif/api-mocker
 First, create a new API mocker for your provider using the command:
 
 ```shell
-bash vendor/bin/make-api-mocker YourProviderName
+vendor/bin/make-api-mocker YourProviderName
 ```
 
 For example, to create a Stripe API mocker:
 
 ```shell
-bash vendor/bin/make-api-mocker Stripe
+vendor/bin/make-api-mocker Stripe
 ```
 
 This will create:
