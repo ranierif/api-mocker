@@ -20,7 +20,7 @@ jobs:
       with:
         php-version: '8.2'
         extensions: json
-        coverage: xdebug
+        coverage: pcov
         tools: composer:v2
     
     - name: Install dependencies
@@ -32,7 +32,13 @@ jobs:
     - name: Fix coverage report paths for SonarCloud
       run: |
         mkdir -p reports/coverage
-        cp -r reports/coverage.xml reports/coverage/
+        # Ensure the coverage.xml file exists before copying
+        if [ -f "reports/coverage.xml" ]; then
+          cp -r reports/coverage.xml reports/coverage/
+        else
+          echo "Warning: reports/coverage.xml file not found"
+          ls -la reports/
+        fi
         
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
