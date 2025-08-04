@@ -27,28 +27,22 @@ jobs:
       run: composer install --prefer-dist --no-progress
     
     - name: Run tests with coverage
-      run: composer test:coverage
-      
-    - name: Fix coverage report paths for SonarCloud
-      run: |
-        mkdir -p reports/coverage
-        # Ensure the coverage.xml file exists before copying
-        if [ -f "reports/coverage.xml" ]; then
-          cp -r reports/coverage.xml reports/coverage/
-        else
-          echo "Warning: reports/coverage.xml file not found"
-          ls -la reports/
-        fi
-        
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
+      run: vendor/bin/phpunit --coverage-clover=reports/coverage-clover.xml
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: reports/coverage-clover.xml
+
+    - name: Download coverage report
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-report
+
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: >
-          -Dsonar.projectKey=ranierif_api-mocker
-          -Dsonar.organization=ranierif
-          -Dsonar.php.coverage.reportPaths=reports/coverage.xml
-          -Dsonar.sources=src
-          -Dsonar.tests=tests
+
