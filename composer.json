@@ -34,7 +34,7 @@
   },
   "scripts": {
     "test": "vendor/bin/phpunit",
-    "test:coverage": "vendor/bin/phpunit --coverage-html reports",
+    "test:coverage": "vendor/bin/phpunit --coverage-html reports --coverage-clover reports/coverage-clover.xml",
     "cs": "vendor/bin/php-cs-fixer check",
     "cs:fix": "vendor/bin/php-cs-fixer fix",
     "phpstan:analyse": "vendor/bin/phpstan analyse"

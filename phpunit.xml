@@ -4,7 +4,7 @@
     <report>
       <html outputDirectory="reports/coverage"/>
       <text outputFile="reports/coverage.txt"/>
-      <clover outputFile="reports/logs/clover.xml"/>
+      <clover outputFile="reports/coverage-clover.xml"/>
     </report>
   </coverage>
   <logging>
