@@ -1,3 +1,10 @@
+[![Test](https://github.com/ranierif/api-mocker/actions/workflows/test.yml/badge.svg)](https://github.com/ranierif/api-mocker/actions/workflows/test.yml)
+[![PHP Version Require](http://poser.pugx.org/ranierif/api-mocker/require/php)](https://packagist.org/packages/ranierif/api-mocker)
+[![Latest Stable Version](http://poser.pugx.org/ranierif/api-mocker/v)](https://packagist.org/packages/ranierif/api-mocker) 
+[![Total Downloads](http://poser.pugx.org/ranierif/api-mocker/downloads)](https://packagist.org/packages/ranierif/api-mocker) 
+[![License](http://poser.pugx.org/ranierif/api-mocker/license)](https://packagist.org/packages/ranierif/api-mocker)
+------
+
 # API Mocker
 
 A simple and flexible package to mock API responses for testing in PHP applications. This package helps you create and manage mock responses for your API integrations, making your tests more reliable and faster.
@@ -98,7 +105,11 @@ class PaymentTest extends TestCase
     public function test_successful_customer_creation(): void
     {
         // Arrange
-        $mockResponseBody = $this->getMockResponseAsArray('stripe', 'customers', 'success');
+        $mockResponseBody = $this->getMockResponseAsArray(
+            provider: 'stripe', 
+            endpoint: 'customers', 
+            scenario: 'success',
+        );
                 
         $this->instance(
             StripeApiService::class,
