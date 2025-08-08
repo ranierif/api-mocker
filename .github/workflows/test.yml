@@ -1,4 +1,4 @@
-name: Test Coverage
+name: Test
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test-coverage:
+  test:
     runs-on: ubuntu-latest
     
     steps:
