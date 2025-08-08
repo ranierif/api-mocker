@@ -6,7 +6,7 @@ namespace Ranierif\Contracts;
 
 interface ApiMockerInterface
 {
-    public function getResponse(string $endpoint, string $type): string;
+    public function getResponse(string $endpoint, string $scenario): string;
 
     public function getMockPath(): string;
 

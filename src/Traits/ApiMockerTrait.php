@@ -54,18 +54,18 @@ trait ApiMockerTrait
     /**
      * Get mock response as string.
      */
-    protected function getMockResponse(string $provider, string $endpoint, string $type): string
+    protected function getMockResponse(string $provider, string $endpoint, string $scenario): string
     {
-        return $this->getApiMocker($provider)->getResponse($endpoint, $type);
+        return $this->getApiMocker($provider)->getResponse($endpoint, $scenario);
     }
 
     /**
      * Get a mock response as an array.
      * @throws \RuntimeException
      */
-    protected function getMockResponseAsArray(string $provider, string $endpoint, string $type): array
+    protected function getMockResponseAsArray(string $provider, string $endpoint, string $scenario): array
     {
-        $decoded = json_decode($this->getMockResponse($provider, $endpoint, $type), true);
+        $decoded = json_decode($this->getMockResponse($provider, $endpoint, $scenario), true);
 
         if (! is_array($decoded)) {
             throw new \RuntimeException('Invalid JSON returned by mocker');
