@@ -1,8 +1,9 @@
 [![Test](https://github.com/ranierif/api-mocker/actions/workflows/test.yml/badge.svg)](https://github.com/ranierif/api-mocker/actions/workflows/test.yml)
-[![PHP Version Require](https://poser.pugx.org/ranierif/api-mocker/require/php)](https://packagist.org/packages/ranierif/api-mocker)
 [![Latest Stable Version](http://poser.pugx.org/ranierif/api-mocker/v)](https://packagist.org/packages/ranierif/api-mocker) 
 [![Total Downloads](http://poser.pugx.org/ranierif/api-mocker/downloads)](https://packagist.org/packages/ranierif/api-mocker) 
-[![License](http://poser.pugx.org/ranierif/api-mocker/license)](https://packagist.org/packages/ranierif/api-mocker)
+[![Latest Unstable Version](http://poser.pugx.org/ranierif/api-mocker/v/unstable)](https://packagist.org/packages/ranierif/api-mocker) 
+[![License](http://poser.pugx.org/ranierif/api-mocker/license)](https://packagist.org/packages/ranierif/api-mocker) 
+
 ------
 
 # API Mocker
