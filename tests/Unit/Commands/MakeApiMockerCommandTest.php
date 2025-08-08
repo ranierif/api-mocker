@@ -144,13 +144,13 @@ class MakeApiMockerCommandTest extends TestCase
 
             $cmdFile = (new \ReflectionClass(MakeApiMockerCommand::class))->getFileName();
             if ($cmdFile === false) {
-                $this->fail('Não foi possível obter o caminho do arquivo da classe MakeApiMockerCommand.');
+                $this->fail('It was not possible to obtain the file path of the MakeApiMockerCommand class.');
             }
             $cmdDir = dirname($cmdFile);
 
             $autoloadCandidate = realpath($cmdDir . '/../../vendor/autoload.php');
             if ($autoloadCandidate === false) {
-                $this->markTestSkipped('vendor/autoload.php não encontrado para o cálculo do esperado');
+                $this->markTestSkipped('vendor/autoload.php not found for the expected calculation');
             }
 
             $expectedProjectRoot = dirname($autoloadCandidate, 2);

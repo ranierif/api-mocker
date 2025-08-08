@@ -62,7 +62,6 @@ trait ApiMockerTrait
     /**
      * Get a mock response as an array.
      * @return array<string, mixed>
-     * @throws \RuntimeException
      */
     protected function getMockResponseAsArray(string $provider, string $endpoint, string $scenario): array
     {
