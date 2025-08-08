@@ -33,6 +33,7 @@
     }
   },
   "scripts": {
+    "make:api-mocker": "Ranierif\\Commands\\MakeApiMockerCommand",
     "test": "vendor/bin/phpunit",
     "test:coverage": "vendor/bin/phpunit --coverage-html reports --coverage-clover reports/coverage-clover.xml",
     "cs": "vendor/bin/php-cs-fixer check",
