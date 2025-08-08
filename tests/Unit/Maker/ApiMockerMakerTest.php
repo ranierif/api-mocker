@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Maker;
 
 use PHPUnit\Framework\TestCase;
+use Ranierif\Exceptions\ApiMockerMakerException;
 use Ranierif\Maker\ApiMockerMaker;
 
 /**
@@ -67,7 +68,7 @@ final class ApiMockerMakerTest extends TestCase
 
     public function testThrowsWhenProviderIsEmpty(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(ApiMockerMakerException::class);
         $this->expectExceptionMessage('Provider name is required.');
 
         (new ApiMockerMaker())->make('', $this->tempDir);
@@ -75,7 +76,7 @@ final class ApiMockerMakerTest extends TestCase
 
     public function testThrowsWhenBaseDirCannotBeResolved(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(ApiMockerMakerException::class);
         $this->expectExceptionMessage('Failed to resolve current working directory.');
 
         (new ApiMockerMaker())->make('AnyProvider', '');
@@ -94,7 +95,7 @@ final class ApiMockerMakerTest extends TestCase
 
         file_put_contents($providerPath, 'I am a file, not a directory');
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(ApiMockerMakerException::class);
         $this->expectExceptionMessage('Failed to create directory: ' . $providerPath);
 
         (new ApiMockerMaker())->make($provider, $this->tempDir);
@@ -112,8 +113,8 @@ final class ApiMockerMakerTest extends TestCase
         }
         file_put_contents($jsonPath, 'file that blocks json dir creation');
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Failed to create directory: ' . $jsonPath);
+        $this->expectException(ApiMockerMakerException::class);
+        $this->expectExceptionMessage('Failed to create directory for json: ' . $jsonPath);
 
         (new ApiMockerMaker())->make($provider, $this->tempDir);
     }
@@ -132,7 +133,7 @@ final class ApiMockerMakerTest extends TestCase
         $originalPerms = fileperms($base);
         chmod($base, 0555);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(ApiMockerMakerException::class);
         $this->expectExceptionMessage('Failed to write class file: ' . $classFile);
 
         try {
