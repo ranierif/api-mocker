@@ -4,4 +4,8 @@ parameters:
         - src
         - tests
 
-    checkMissingIterableValueType: false
+    reportUnmatchedIgnoredErrors: true
+
+    ignoreErrors:
+        - '#Call to an undefined method Mockery\\.*#'
+        - '#Method .+::(createMockedInput|createMockedOutput)\(\) should return .+ but returns Mockery\\MockInterface.#'

@@ -11,6 +11,9 @@ class ApiMockerFactory
     /** @var ApiMockerInterface[] */
     private array $mockers;
 
+    /**
+     * @param ApiMockerInterface[] $mockers
+     */
     public function __construct(array $mockers = [])
     {
         $this->mockers = $mockers;

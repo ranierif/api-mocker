@@ -1,18 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require file_exists(__DIR__ . '/../vendor/autoload.php')
+	? __DIR__ . '/../vendor/autoload.php'
+	: __DIR__ . '/../../autoload.php';
 
-if ($argc !== 2) {
-    echo "Usage: php make-api-mocker <provider-name>\n";
-    echo "Example: php make-api-mocker Stripe\n";
-    exit(1);
-}
+use Symfony\Component\Console\Application;
+use Ranierif\Commands\MakeApiMockerCommand;
 
-try {
-    $command = new \Ranierif\Commands\MakeApiMockerCommand();
-    $command->execute($argv[1]);
-} catch (\Exception $e) {
-    echo "Error: " . $e->getMessage() . "\n";
-    exit(1);
-}
+$application = new Application();
+$application->add(new MakeApiMockerCommand());
+$application->run();
