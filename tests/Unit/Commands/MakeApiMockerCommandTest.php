@@ -123,6 +123,49 @@ class MakeApiMockerCommandTest extends TestCase
         $this->assertEquals(Command::SUCCESS, $result);
     }
 
+    public function testGetProjectRootFallsBackToAutoloadPathsWhenNoComposerJsonInCwd(): void
+    {
+        $originalCwd = getcwd();
+        if ($originalCwd === false) {
+            $this->markTestSkipped('getcwd() retornou false');
+        }
+
+        $tempCwd = sys_get_temp_dir() . '/api-mocker-cwd-' . uniqid();
+        mkdir($tempCwd, 0777, true);
+        chdir($tempCwd);
+
+        try {
+            $command = new MakeApiMockerCommand();
+
+            $ref = new \ReflectionClass($command);
+            $method = $ref->getMethod('getProjectRoot');
+            $method->setAccessible(true);
+            $result = $method->invoke($command);
+
+            $cmdFile = (new \ReflectionClass(MakeApiMockerCommand::class))->getFileName();
+            if ($cmdFile === false) {
+                $this->fail('Não foi possível obter o caminho do arquivo da classe MakeApiMockerCommand.');
+            }
+            $cmdDir = dirname($cmdFile);
+
+            $autoloadCandidate = realpath($cmdDir . '/../../vendor/autoload.php');
+            if ($autoloadCandidate === false) {
+                $this->markTestSkipped('vendor/autoload.php não encontrado para o cálculo do esperado');
+            }
+
+            $expectedProjectRoot = dirname($autoloadCandidate, 2);
+
+            $this->assertSame($expectedProjectRoot, $result);
+        } finally {
+            if ($originalCwd !== false) {
+                chdir($originalCwd);
+            }
+            if (is_dir($tempCwd)) {
+                @rmdir($tempCwd);
+            }
+        }
+    }
+
     private function createMockedInput(string $name): InputInterface
     {
         $input = \Mockery::mock(InputInterface::class);

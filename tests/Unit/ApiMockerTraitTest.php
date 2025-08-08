@@ -20,13 +20,10 @@ class ApiMockerTraitTest extends TestCase
     {
         parent::setUp();
 
-        // Create a test class that doesn't implement ApiMockerInterface
         if (! class_exists('Tests\ApiMocker\Badmock\BadmockApiMocker')) {
             eval('
                 namespace Tests\ApiMocker\Badmock;
-                class BadmockApiMocker {
-                    // This class intentionally does not implement ApiMockerInterface
-                }
+                class BadmockApiMocker {}
             ');
         }
     }

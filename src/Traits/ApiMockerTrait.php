@@ -68,10 +68,6 @@ trait ApiMockerTrait
     {
         $decoded = json_decode($this->getMockResponse($provider, $endpoint, $scenario), true);
 
-        if (! is_array($decoded)) {
-            throw new \RuntimeException('Invalid JSON returned by mocker');
-        }
-
-        return $decoded;
+        return is_array($decoded) ? $decoded : [];
     }
 }

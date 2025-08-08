@@ -67,8 +67,11 @@ class MakeApiMockerCommand extends Command
 
     private function getProjectRoot(): string
     {
-        if (file_exists(getcwd() . '/composer.json')) {
-            return getcwd() ?: '';
+        $cwd = getcwd() ?: '';
+        $cwdReal = $cwd !== '' ? (realpath($cwd) ?: $cwd) : '';
+
+        if ($cwd !== '' && file_exists($cwd . '/composer.json')) {
+            return $cwdReal;
         }
 
         $autoloadPaths = [
@@ -79,11 +82,12 @@ class MakeApiMockerCommand extends Command
 
         foreach ($autoloadPaths as $path) {
             if (file_exists($path)) {
-                return dirname($path, 2);
+                $root = dirname($path, 2);
+                return realpath($root) ?: $root;
             }
         }
 
-        return getcwd() ?: '';
+        return $cwdReal;
     }
 
     private function createDirectories(string $providerName): void
