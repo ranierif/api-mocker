@@ -1,13 +1,30 @@
 #!/usr/bin/env php
 <?php
 
-require file_exists(__DIR__ . '/../vendor/autoload.php')
-	? __DIR__ . '/../vendor/autoload.php'
-	: __DIR__ . '/../../autoload.php';
+declare(strict_types=1);
+$autoloadPaths = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+];
+foreach ($autoloadPaths as $p) {
+    if (file_exists($p)) {
+        require $p;
+        break;
+    }
+}
 
-use Symfony\Component\Console\Application;
-use Ranierif\Commands\MakeApiMockerCommand;
+use Ranierif\Maker\ApiMockerMaker;
 
-$application = new Application();
-$application->add(new MakeApiMockerCommand());
-$application->run();
+$providerName = $argv[1] ?? null;
+if (! $providerName) {
+    fwrite(STDERR, "Usage: vendor/bin/make-api-mocker <ProviderName>\n");
+    exit(1);
+}
+
+try {
+    (new ApiMockerMaker())->make($providerName);
+    echo "✅ ApiMocker for {$providerName} created successfully!\n";
+} catch (Throwable $e) {
+    fwrite(STDERR, "Error: {$e->getMessage()}\n");
+    exit(1);
+}
