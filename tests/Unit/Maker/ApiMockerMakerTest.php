@@ -36,7 +36,6 @@ final class ApiMockerMakerTest extends TestCase
         // Arrange
         $provider = 'BankInter';
 
-        // Verifica se o stub existe (para não ter falso negativo)
         $stubPath = dirname(__DIR__, 3) . '/src/Maker/stubs/api-mocker.stub';
         $rootStub = dirname(__DIR__, 3) . '/api-mocker.stub';
         if (! file_exists($stubPath) && ! file_exists($rootStub)) {
@@ -48,19 +47,17 @@ final class ApiMockerMakerTest extends TestCase
         // Act
         $maker->make($provider, $this->tempDir);
 
-        // Assert: diretórios
+        // Assert
         $base = $this->tempDir . '/tests/ApiMocker/' . $provider;
         $this->assertDirectoryExists($base, 'Provider directory not created');
         $this->assertDirectoryExists($base . '/json', 'JSON directory not created');
 
-        // Assert: arquivo de classe
         $classFile = $base . '/' . $provider . 'ApiMocker.php';
         $this->assertFileExists($classFile, 'Class file not created');
 
         $content = file_get_contents($classFile);
         $this->assertNotFalse($content, 'Failed to read generated class file');
 
-        // Verifica substituição dos placeholders
         $this->assertStringContainsString("namespace Tests\\ApiMocker\\{$provider};", $content);
         $this->assertStringContainsString("class {$provider}ApiMocker extends AbstractApiMocker", $content);
         $this->assertStringContainsString("return '{$provider}';", $content);
@@ -143,6 +140,98 @@ final class ApiMockerMakerTest extends TestCase
                 chmod($base, $originalPerms & 0777 ?: 0777);
             } else {
                 chmod($base, 0777);
+            }
+        }
+    }
+
+    public function testThrowsWhenCannotCreateProviderDirectoryWithoutPermissions(): void
+    {
+        $maker = new ApiMockerMaker();
+        $provider = 'NoPermsProvider';
+
+        $apiMockerRoot = $this->tempDir . '/tests/ApiMocker';
+        if (! is_dir($apiMockerRoot)) {
+            mkdir($apiMockerRoot, 0777, true);
+        }
+
+        $originalPerms = fileperms($apiMockerRoot);
+        chmod($apiMockerRoot, 0555); // sem escrita
+
+        $providerPath = $apiMockerRoot . '/' . $provider;
+
+        $this->expectException(ApiMockerMakerException::class);
+        $this->expectExceptionMessage('Failed to create directory without permissions: ' . $providerPath);
+
+        try {
+            $maker->make($provider, $this->tempDir);
+        } finally {
+            if ($originalPerms !== false) {
+                chmod($apiMockerRoot, $originalPerms & 0777 ?: 0777);
+            } else {
+                chmod($apiMockerRoot, 0777);
+            }
+        }
+    }
+
+    public function testThrowsWhenCannotCreateJsonDirectoryWithoutPermissions(): void
+    {
+        $maker = new ApiMockerMaker();
+        $provider = 'NoPermsJson';
+
+        $providerBase = $this->tempDir . '/tests/ApiMocker/' . $provider;
+        if (! is_dir($providerBase)) {
+            mkdir($providerBase, 0777, true);
+        }
+
+        $jsonPath = $providerBase . '/json';
+
+        $originalPerms = fileperms($providerBase);
+        chmod($providerBase, 0555);
+
+        $this->expectException(ApiMockerMakerException::class);
+        $this->expectExceptionMessage('Failed to create directory for json without permissions: ' . $jsonPath);
+
+        try {
+            $maker->make($provider, $this->tempDir);
+        } finally {
+            if ($originalPerms !== false) {
+                chmod($providerBase, $originalPerms & 0777 ?: 0777);
+            } else {
+                chmod($providerBase, 0777);
+            }
+        }
+    }
+
+    public function testThrowsWhenStubExistsButCannotBeRead(): void
+    {
+        $stubPath = dirname(__DIR__, 3) . '/src/Maker/stubs/api-mocker.stub';
+        if (! file_exists($stubPath)) {
+            $stubPath = dirname(__DIR__, 3) . '/api-mocker.stub';
+        }
+        if (! file_exists($stubPath)) {
+            $this->markTestSkipped('Stub file not found, cannot test unreadable stub branch.');
+        }
+
+        $maker = new ApiMockerMaker();
+        $provider = 'UnreadableStub';
+
+        $base = $this->tempDir . '/tests/ApiMocker/' . $provider;
+        $json = $base . '/json';
+        mkdir($json, 0777, true);
+
+        $origPerms = fileperms($stubPath);
+        chmod($stubPath, 0000);
+
+        $this->expectException(ApiMockerMakerException::class);
+        $this->expectExceptionMessage('Failed to read stub file:');
+
+        try {
+            $maker->make($provider, $this->tempDir);
+        } finally {
+            if ($origPerms !== false) {
+                chmod($stubPath, $origPerms & 0777 ?: 0644);
+            } else {
+                chmod($stubPath, 0644);
             }
         }
     }

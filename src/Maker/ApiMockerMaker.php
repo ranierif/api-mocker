@@ -53,7 +53,7 @@ final class ApiMockerMaker
             );
         }
 
-        $stubContent = file_get_contents($stubPath);
+        $stubContent = @file_get_contents($stubPath);
         if ($stubContent === false) {
             throw new ApiMockerMakerException(
                 sprintf('Failed to read stub file: %s', $stubPath)
